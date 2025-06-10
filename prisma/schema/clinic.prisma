@@ -30,7 +30,6 @@ enum AppointmentStatus {
   SCHEDULED
   CANCELLED
   COMPLETED
-  RESCHEDULED
 }
 
 enum PaymentMethod {
@@ -55,12 +54,7 @@ enum VaccineStatus {
   CATCH_UP
 }
 
-enum GrowthMeasurementType {
-  WEIGHT
-  HEIGHT
-  HEAD_CIRCUMFERENCE
-  BMI
-}
+
 
 enum MilestoneCategory {
   GROSS_MOTOR
@@ -404,21 +398,25 @@ model Service {
 
 model GrowthMeasurement {
   id                        Int                 @id @default(autoincrement()) @map("growth_measurement_id")
-  patientId                 String              @map("patient_id")
-  measurementDate           DateTime            @map("measurement_date")
-  measurementType           GrowthMeasurementType @map("measurement_type")
-  value                     Float
-  unit                      String
-  notes                     String?
-  zScore                    Float?              @map("z_score")
-  percentile                Float?
-
+  patientId   String
+  gender      Gender?
+  ageInDays     Float?
+measurementDate     DateTime
+weightKg        Float
+heightCm        Float?
+headCircumferenceCm   Float?
+bmi     Float?
+weightZScore    Float?
+heightZScore    Float?
+headCircumferenceZScore   Float?
+bmiZScore       Float?
+notes           String?
   patient                   Patient             @relation(fields: [patientId], references: [id], onDelete: Cascade)
 
   createdAt                 DateTime            @default(now()) @map("created_at")
   updatedAt                 DateTime            @updatedAt @map("updated_at")
 
-  @@index([patientId, measurementDate, measurementType])
+  @@index([patientId, measurementDate, gender])
   @@map("growth_measurements")
 }
 

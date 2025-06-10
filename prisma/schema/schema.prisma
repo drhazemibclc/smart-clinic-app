@@ -9,6 +9,8 @@ generator client {
   previewFeatures = ["views", "driverAdapters", "relationJoins"]
   // Changed moduleFormat to "esm" for modern Node.js environments if not already
   moduleFormat    = "esm"
+    generatedFileExtension = "ts"
+  importFileExtension    = "ts"
 }
 
 datasource db {

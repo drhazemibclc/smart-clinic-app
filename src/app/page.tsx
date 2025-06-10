@@ -1,103 +1,111 @@
-import Image from "next/image";
+import { motion } from "framer-motion"
+import Link from "next/link"
+import { redirect } from "next/navigation"
+import { Suspense } from "react"
+import { HexagonBackground } from "@/components/hexagon-background"
+import { Button } from "@/components/ui/button"
+import { getSession } from "@/lib/auth"
+import { HydrateClient } from "@/trpc/server"
+import { getRole } from "@/utils/roles"
+import { SignButton } from "./_components/sign-button"
 
-export default function Home() {
-  return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
-      <main className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-center font-[family-name:var(--font-geist-mono)] text-sm/6 sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="rounded bg-black/[.05] px-1 py-0.5 font-[family-name:var(--font-geist-mono)] font-semibold dark:bg-white/[.06]">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+export default async function Home() {
+    const session = await getSession()
+    const userId = session?.user?.id
+    const role = session?.user?.role || (await getRole())
 
-        <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <a
-            className="flex h-10 items-center justify-center gap-2 rounded-full border border-transparent border-solid bg-foreground px-4 font-medium text-background text-sm transition-colors hover:bg-[#383838] sm:h-12 sm:w-auto sm:px-5 sm:text-base dark:hover:bg-[#ccc]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="flex h-10 w-full items-center justify-center rounded-full border border-black/[.08] border-solid px-4 font-medium text-sm transition-colors hover:border-transparent hover:bg-[#f2f2f2] sm:h-12 sm:w-auto sm:px-5 sm:text-base md:w-[158px] dark:border-white/[.145] dark:hover:bg-[#1a1a1a]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex flex-wrap items-center justify-center gap-[24px]">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    if (userId && role) {
+        redirect(`/${role.toLowerCase()}`)
+    }
+
+    return (
+        <HydrateClient>
+            <HexagonBackground
+                className="flex size-full min-h-screen items-center justify-center"
+                hexagonSize={65}
+                hexagonMargin={2}
+            >
+                <div className="flex h-screen flex-col items-center justify-between p-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 60 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7, ease: "easeOut" }}
+                        className="flex flex-1 flex-col items-center justify-center px-4 text-center md:px-8"
+                    >
+                        <h1 className="text-center font-extrabold text-4xl leading-tight md:text-5xl lg:text-6xl">
+                            Welcome to
+                            <motion.span
+                                className="mt-2 block text-6xl text-blue-700 md:text-7xl lg:text-8xl"
+                                initial={{ scale: 0.95, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ duration: 1, delay: 0.4, type: "spring" }}
+                            >
+                                Kinda HMS
+                            </motion.span>
+                        </h1>
+
+                        <p className="mx-auto mt-4 max-w-3xl text-gray-600 text-lg md:text-xl">
+                            Your trusted partner in pediatric healthcare.
+                        </p>
+
+                        <motion.p
+                            className="mt-6 mb-10 max-w-2xl text-base text-gray-700 leading-relaxed md:text-lg"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.8 }}
+                        >
+                            At <strong>Kinda HMS</strong>, we believe in nurturing health from the
+                            very first step. Our platform simplifies pediatric care — from
+                            appointment scheduling to growth tracking and medical records.
+                        </motion.p>
+
+                        <div className="flex w-full flex-col justify-center gap-4 sm:flex-row">
+                            {userId ? (
+                                <Link
+                                    href={`/${role?.toLowerCase() || ""}`}
+                                    className="w-full sm:w-auto"
+                                >
+                                    <Button className="w-full py-6 font-semibold text-lg">
+                                        Go to Your Dashboard
+                                    </Button>
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link href="/sign-up" className="w-full sm:w-auto">
+                                        <Button className="w-full bg-blue-600 py-6 font-semibold text-lg hover:bg-blue-700">
+                                            New Patient? Register Here!
+                                        </Button>
+                                    </Link>
+                                    <Suspense
+                                        fallback={
+                                            <div className="h-12 w-full animate-pulse rounded-md bg-gray-200 sm:w-auto" />
+                                        }
+                                    >
+                                        <SignButton session={undefined} />
+                                    </Suspense>
+                                    <Link href="/sign-in" className="w-full sm:w-auto">
+                                        <Button
+                                            variant="outline"
+                                            className="w-full border-blue-700 py-6 font-medium text-blue-700 text-lg hover:bg-blue-50 hover:text-blue-800"
+                                        >
+                                            Already have an account? Log In
+                                        </Button>
+                                    </Link>
+                                </>
+                            )}
+                        </div>
+                    </motion.div>
+
+                    <footer className="w-full p-4">
+                        <p className="text-center text-gray-500 text-sm">
+                            &copy; {new Date().getFullYear()} Kinda HMS. All rights reserved.{" "}
+                            <span className="hidden sm:inline">
+                                Nurturing little lives, together.
+                            </span>
+                        </p>
+                    </footer>
+                </div>
+            </HexagonBackground>
+        </HydrateClient>
+    )
 }
