@@ -19,6 +19,10 @@ const betterAuth = betterAuthClient({
     database: prismaAdapter(db, {
         provider: "postgresql"
     }),
+    trustedOrigins: [
+        "http://localhost:3000", // Keep your local development origin
+        "https://3001-firebase-smart-clinic-appgit-1749545326258.cluster-axf5tvtfjjfekvhwxwkkkzsk2y.cloudworkstations.dev"
+    ],
     secret: process.env.BETTER_AUTH_SECRET as string,
     baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
     user: {

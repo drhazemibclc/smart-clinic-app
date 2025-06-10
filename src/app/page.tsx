@@ -69,7 +69,7 @@ export default async function Home() {
                             }}
                             transition={{
                                 delay: 0.8,
-                                duration: 1.5,
+                                duration: 2,
                                 ease: "easeOut",
                                 repeat: Infinity,
                                 repeatType: "reverse"
