@@ -7,7 +7,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/
 // as they are accessed via ctx.db (your Prisma client instance).
 
 // Import Z-score utility functions
-import { calculateZScore, getAgeInDays } from "@/lib/growth-data/zscoreCalc"
+import { calculateZScore, getAgeInDays } from "@/lib/zscoreCalc"
 
 export const growthRouter = createTRPCRouter({
     /**

@@ -70,5 +70,7 @@
     "typescript.referencesCodeLens.enabled": false,
     "javascript.implementationsCodeLens.enabled": false,
     "typescript.implementationsCodeLens.enabled": false,
-    "disable-hardware-acceleration": true
+    "disable-hardware-acceleration": true,
+    "IDX.aI.enableInlineCompletion": true,
+    "IDX.aI.enableCodebaseIndexing": true
 }

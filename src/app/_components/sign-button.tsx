@@ -2,13 +2,13 @@
 
 import { useRouter } from "next/navigation"
 import { LiquidButton } from "@/components/liquid-button"
-import { type Session, signIn, signOut } from "@/server/auth/auth-client"
+import { type Session, signIn, signOut } from "@/lib/auth/client"
 
 export const SignButton = ({ session }: { session: Session | null }) => {
     const router = useRouter()
 
-    const onClick = async () => {
-        if (session) {
+    const handleClick = async () => {
+        if (session?.user?.id) {
             await signOut()
             router.refresh()
         } else {
@@ -16,15 +16,19 @@ export const SignButton = ({ session }: { session: Session | null }) => {
         }
     }
 
+    const userName = session?.user?.name ?? session?.user?.email ?? "User"
+
     return (
-        <div>
-            {session?.user.id ? (
-                <div className="flex flex-col items-center justify-center gap-2">
-                    <p>Signed in as {session.user.name}</p>
-                    <AuthButton onClick={onClick} text="Sign out" />
-                </div>
+        <div className="flex flex-col items-center gap-2 text-gray-700 text-sm">
+            {session?.user?.id ? (
+                <>
+                    <p className="text-gray-600 text-sm">
+                        Signed in as <strong>{userName}</strong>
+                    </p>
+                    <AuthButton onClick={handleClick} text="Sign out" />
+                </>
             ) : (
-                <AuthButton onClick={onClick} text="Sign in" />
+                <AuthButton onClick={handleClick} text="Sign in with Google" />
             )}
         </div>
     )
@@ -32,7 +36,11 @@ export const SignButton = ({ session }: { session: Session | null }) => {
 
 const AuthButton = ({ onClick, text }: { onClick: () => void; text: string }) => {
     return (
-        <LiquidButton onClick={onClick} className="rounded-2xl px-3 py-0.5 font-semibold">
+        <LiquidButton
+            onClick={onClick}
+            className="rounded-2xl px-4 py-2 font-medium shadow-sm transition-all hover:brightness-110"
+            aria-label={text}
+        >
             {text}
         </LiquidButton>
     )

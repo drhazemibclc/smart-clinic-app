@@ -1,5 +1,5 @@
 // src/lib/growth-data/zscoreCalc.ts
-import growthData from "./growthData.json"
+import growthData from "../../public/growth-data/growthData.json"
 
 interface LMSDataPoint {
     day: number
